@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  font-family: 'Inter', sans-serif;
+  background: #fff7ed;
+  color: #0f172a;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(14, 116, 144, 0.14), transparent 28%),
+    linear-gradient(180deg, #fffaf5 0%, #fff7ed 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -0.03em;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+@layer components {
+  .card-surface {
+    @apply rounded-2xl border border-orange-100 bg-white shadow-soft;
+  }
+
+  .input-field {
+    @apply w-full rounded-xl border border-orange-200 bg-white px-3 py-3 text-sm text-slate-800 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-primary px-4 py-3 font-semibold text-black transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary/30;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-primary bg-transparent px-4 py-3 font-semibold text-primary transition hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-primary/30;
+  }
+}
+
+@page {
+  size: auto;
+  margin: 16mm 14mm;
+}
+
+@media print {
+  html,
+  body {
+    min-width: 0;
+    background: #fff;
+    color: #0f172a;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .report-preview {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .report-section,
+  .report-settlement {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .report-preview .overflow-x-auto {
+    overflow: visible;
+  }
+
+  .report-preview table {
+    width: 100%;
+    min-width: 0;
+    font-size: 8pt;
+  }
+
+  .report-preview th,
+  .report-preview td {
+    padding: 5px;
+    overflow-wrap: anywhere;
+  }
+
+  .report-preview thead {
+    display: table-header-group;
+  }
+
+  .report-preview tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .report-footer {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

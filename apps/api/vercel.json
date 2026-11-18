@@ -1,0 +1,23 @@
+{
+  "services": {
+    "api": {
+      "root": ".",
+      "framework": "express",
+      "entrypoint": "src/app.ts",
+      "buildCommand": "npx prisma generate --schema prisma/schema.postgres.prisma && npm run build",
+      "functions": {
+        "src/app.ts": {
+          "maxDuration": 60
+        }
+      }
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "api"
+      }
+    }
+  ]
+}

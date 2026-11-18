@@ -1,0 +1,3 @@
+ALTER TABLE `Trip`
+    ADD COLUMN `startDate` DATE NULL,
+    ADD COLUMN `endDate` DATE NULL;

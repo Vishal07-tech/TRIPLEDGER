@@ -1,0 +1,370 @@
+{
+  "status": "failed",
+  "error": "Browser-created expense records a 100.00 payer contribution",
+  "cleanupError": null,
+  "checks": [
+    "Found and clicked “Register”",
+    "Found form field input[type=text]",
+    "Found form field input[type=email]",
+    "Found form field input[type=password]",
+    "Found and clicked “Create account”",
+    "Browser registration established an authenticated session",
+    "Found and clicked “Create trip”",
+    "Found form field input[placeholder=\"Coastal weekend\"]",
+    "Found form field select",
+    "Found form field input[type=date]",
+    "Found form field input[type=date]@1",
+    "Found form field textarea",
+    "Submitted the trip creation form in Chrome",
+    "Trip dates were persisted through the browser workflow",
+    "Currency and initial trip settings were persisted",
+    "My Trips groups the new trip in the dashboard",
+    "Found and clicked “Create trip”",
+    "Found form field input[placeholder=\"Coastal weekend\"]",
+    "Found form field select",
+    "Found form field input[type=date]",
+    "Found form field input[type=date]@1",
+    "Found form field textarea",
+    "Submitted the trip creation form in Chrome",
+    "Trip dates were persisted through the browser workflow",
+    "Currency and initial trip settings were persisted",
+    "Dashboard opens the selected first trip",
+    "Found form field #trip-select",
+    "Trip selector switches to the second trip in the browser",
+    "Found form field #trip-select",
+    "Trip selector switches back to the first trip",
+    "Found form field #invite-email",
+    "Found and clicked “Create invitation”",
+    "Owner sees the pending registered-user invitation",
+    "Invitation acceptance rejects a different registered account email",
+    "Found form field input[type=email]",
+    "Found form field input[type=password]",
+    "Found and clicked “Sign in to TripLedger”",
+    "Invited member signed in through the browser",
+    "New member sees the empty trip state before accepting",
+    "Invitation shows the authenticated matching email",
+    "Found and clicked “Accept”",
+    "Member accepted invitation through the browser",
+    "Found and clicked “Trip members and settings”",
+    "Both trip members are visible after acceptance",
+    "Member account cannot access management controls",
+    "Ordinary member is denied cash-manager, member-add, and pending-invitation manager APIs",
+    "Found form field input[type=email]",
+    "Found form field input[type=password]",
+    "Found and clicked “Sign in to TripLedger”",
+    "Trip owner signed in through the browser",
+    "Found form field #invite-email",
+    "Found and clicked “Create invitation”",
+    "Found form field #invite-email",
+    "Found and clicked “Create invitation”",
+    "Found form field input[type=email]",
+    "Found form field input[type=password]",
+    "Found and clicked “Sign in to TripLedger”",
+    "Declining invitee signed in through the browser",
+    "Found and clicked “Decline”",
+    "Decline action is persisted",
+    "Found form field input[type=email]",
+    "Found form field input[type=password]",
+    "Found and clicked “Sign in to TripLedger”",
+    "Expired invitee signed in through the browser",
+    "Found and clicked “Accept”",
+    "Expired acceptance is rejected and invitation status becomes expired",
+    "Found form field input[type=email]",
+    "Found form field input[type=password]",
+    "Found and clicked “Sign in to TripLedger”",
+    "Trip owner signed in through the browser",
+    "Found form field #member-email",
+    "Found and clicked “Add member”",
+    "Found form field #cash-manager",
+    "Found and clicked “Update manager”",
+    "Owner assigned an active trip member as cash manager",
+    "Found form field #cash-manager",
+    "Found and clicked “Update manager”",
+    "Owner changed the cash manager assignment",
+    "Backend refuses cash-manager assignment to an inactive member",
+    "Found form field [aria-label=\"Stage A Browser Member planned budget\"]",
+    "Owner can configure individual member budgets"
+  ],
+  "invitationAndAuthorizationResults": [
+    {
+      "type": "wrong-email-accept",
+      "status": 404
+    },
+    {
+      "type": "member-management-denied",
+      "cashManagerStatus": 403,
+      "addMemberStatus": 403,
+      "invitationListStatus": 403
+    },
+    {
+      "type": "decline",
+      "status": "declined"
+    },
+    {
+      "type": "expired-accept",
+      "status": 410
+    },
+    {
+      "type": "inactive-cash-manager-rejected",
+      "status": 404
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "my-trips-desktop.png",
+      "path": "my-trips-desktop.png"
+    },
+    {
+      "name": "my-trips-mobile.png",
+      "path": "my-trips-mobile.png"
+    },
+    {
+      "name": "my-trips-two-trips.png",
+      "path": "my-trips-two-trips.png"
+    },
+    {
+      "name": "trip-switching-second-trip.png",
+      "path": "trip-switching-second-trip.png"
+    },
+    {
+      "name": "trip-member-management-owner.png",
+      "path": "trip-member-management-owner.png"
+    },
+    {
+      "name": "invitation-inbox.png",
+      "path": "invitation-inbox.png"
+    },
+    {
+      "name": "member-management-readonly.png",
+      "path": "member-management-readonly.png"
+    },
+    {
+      "name": "trip-member-management-owner-after-acceptance.png",
+      "path": "trip-member-management-owner-after-acceptance.png"
+    },
+    {
+      "name": "manager-pending-invitations.png",
+      "path": "manager-pending-invitations.png"
+    },
+    {
+      "name": "invitation-before-expiry.png",
+      "path": "invitation-before-expiry.png"
+    },
+    {
+      "name": "cash-manager-assigned-to-member.png",
+      "path": "cash-manager-assigned-to-member.png"
+    },
+    {
+      "name": "member-budget-before-expense.png",
+      "path": "member-budget-before-expense.png"
+    }
+  ],
+  "logs": [
+    {
+      "type": "network-failure",
+      "text": "net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_ABORTED",
+      "url": "http://localhost:4000/api/trips/3f0b3e98-50f6-462e-93ae-ba5096a37e79/notifications?limit=20"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_ABORTED",
+      "url": "http://localhost:4000/api/trips/3f0b3e98-50f6-462e-93ae-ba5096a37e79/notifications?limit=20"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_ABORTED",
+      "url": "http://localhost:4000/api/trips/3f0b3e98-50f6-462e-93ae-ba5096a37e79/notifications?limit=20"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_ABORTED",
+      "url": "http://localhost:4000/api/trips/3f0b3e98-50f6-462e-93ae-ba5096a37e79/events"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_ABORTED",
+      "url": "http://localhost:4000/api/trips/65dcf4dc-847e-468c-9c6b-e906759a0e76/events"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 410 (Gone)"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "type": "network-failure",
+      "text": "net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "type": "console",
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    }
+  ],
+  "fixtures": {
+    "tripIds": [
+      "3f0b3e98-50f6-462e-93ae-ba5096a37e79",
+      "65dcf4dc-847e-468c-9c6b-e906759a0e76"
+    ],
+    "invitationIds": [
+      "b7fe8564-0de4-4838-9f01-cce93b64f637",
+      "c45a28dd-f553-4dc8-8c87-87fcbceaa38e",
+      "a8edc7cd-43fe-4ca4-8b28-a8f9bb3648bc"
+    ],
+    "accountIds": [
+      "eefb7603-71a2-475e-ab99-0f5bf7f2ca99",
+      "2b8dab2e-547a-4dc3-9d4a-387e142fcc86",
+      "4e1e0da5-ea67-4a02-b9f8-8b7cd3b27186",
+      "96364400-3aa1-41a7-97fb-68291400a6ea",
+      "bb92674e-e3ae-475b-946b-2f09e5a8cbeb",
+      "16148c54-5e62-44c2-8942-5c01d875280d"
+    ],
+    "cleanedTrips": 2,
+    "cleanedUsers": 6,
+    "remaining": {
+      "users": 0,
+      "trips": 0
+    }
+  },
+  "existingTripAndUserRecordSnapshotUnchanged": true
+}

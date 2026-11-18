@@ -1,0 +1,10 @@
+node_modules
+.env
+.env.*
+!.env.example
+coverage
+apps/api/dist
+apps/web/dist
+packages/shared/dist
+prisma/dev.db
+.DS_Store

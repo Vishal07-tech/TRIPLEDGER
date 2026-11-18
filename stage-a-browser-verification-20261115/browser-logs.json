@@ -1,0 +1,117 @@
+[
+  {
+    "type": "network-failure",
+    "text": "net::ERR_NETWORK_ACCESS_DENIED",
+    "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+  },
+  {
+    "type": "console",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+  },
+  {
+    "type": "console",
+    "level": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  },
+  {
+    "type": "network-failure",
+    "text": "net::ERR_NETWORK_ACCESS_DENIED",
+    "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+  },
+  {
+    "type": "console",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+  },
+  {
+    "type": "network-failure",
+    "text": "net::ERR_NETWORK_ACCESS_DENIED",
+    "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+  },
+  {
+    "type": "console",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+  },
+  {
+    "type": "network-failure",
+    "text": "net::ERR_NETWORK_ACCESS_DENIED",
+    "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+  },
+  {
+    "type": "console",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+  },
+  {
+    "type": "network-failure",
+    "text": "net::ERR_ABORTED",
+    "url": "http://localhost:4000/api/trips/a500d56e-88bf-42a9-a1af-fad049c8aa2b/notifications?limit=20"
+  },
+  {
+    "type": "network-failure",
+    "text": "net::ERR_ABORTED",
+    "url": "http://localhost:4000/api/trips/a500d56e-88bf-42a9-a1af-fad049c8aa2b/notifications?limit=20"
+  },
+  {
+    "type": "network-failure",
+    "text": "net::ERR_ABORTED",
+    "url": "http://localhost:4000/api/trips/a500d56e-88bf-42a9-a1af-fad049c8aa2b/events"
+  },
+  {
+    "type": "network-failure",
+    "text": "net::ERR_ABORTED",
+    "url": "http://localhost:4000/api/trips/c35afc9b-d7ca-4a40-9209-81d770ad3b93/events"
+  },
+  {
+    "type": "network-failure",
+    "text": "net::ERR_NETWORK_ACCESS_DENIED",
+    "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+  },
+  {
+    "type": "console",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+  },
+  {
+    "type": "console",
+    "level": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  },
+  {
+    "type": "network-failure",
+    "text": "net::ERR_NETWORK_ACCESS_DENIED",
+    "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+  },
+  {
+    "type": "console",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+  },
+  {
+    "type": "console",
+    "level": "error",
+    "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+  },
+  {
+    "type": "console",
+    "level": "error",
+    "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+  },
+  {
+    "type": "console",
+    "level": "error",
+    "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+  },
+  {
+    "type": "network-failure",
+    "text": "net::ERR_NETWORK_ACCESS_DENIED",
+    "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+  },
+  {
+    "type": "console",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+  }
+]

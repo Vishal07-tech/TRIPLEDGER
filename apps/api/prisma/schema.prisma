@@ -1,0 +1,554 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+enum TripStatus {
+  ACTIVE
+  CLOSING
+  EXPENSE_REVIEW
+  SETTLEMENT_PLANNED
+  PAYMENTS_PENDING
+  PARTIALLY_SETTLED
+  FULLY_SETTLED
+  TRIP_CLOSED
+}
+
+enum PaymentStatus {
+  PENDING
+  INITIATED
+  VERIFIED
+  REJECTED
+  FAILED
+  DISPUTED
+}
+
+enum SettlementPaymentStatus {
+  PENDING
+  INITIATED
+  SUCCESSFUL
+  VERIFIED
+  REJECTED
+  FAILED
+  EXPIRED
+  DECLINED
+  DISPUTED
+  REFUNDED
+}
+
+enum ExpenseType {
+  PERSONAL
+  GROUP
+}
+
+enum SplitMethod {
+  EQUAL
+  EXACT
+  PERCENTAGE
+  WEIGHTED
+}
+
+enum PaymentMethod {
+  UPI
+  CASH
+}
+
+enum SettlementPaymentMethod {
+  UPI
+  CASH
+  BANK_TRANSFER
+  OTHER
+}
+
+enum NotificationType {
+  MEMBER_JOINED
+  EXPENSE_CREATED
+  EXPENSE_UPDATED
+  LOCATION_CONFIRMATION_REQUESTED
+  BUDGET_APPROACHING
+  BUDGET_EXCEEDED
+  SETTLEMENT_GENERATED
+  SETTLEMENT_ACCEPTED
+  SETTLEMENT_DISPUTED
+  PAYMENT_INITIATED
+  PAYMENT_CONFIRMED
+  PAYMENT_DISPUTE_RESOLVED
+  PAYMENT_REFUNDED
+  TRIP_CLOSED
+}
+
+model User {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  passwordHash    String
+  fullName        String
+  phone           String?
+  role            UserRole @default(MEMBER)
+  themePreference String?  @default("system")
+  avatarUrl       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  tripMemberships         TripMember[]
+  notifications           Notification[]
+  auditLogs               AuditLog[]
+  financialEntries        FinancialEntry[]
+  createdFinancialEntries FinancialEntry[]        @relation("FinancialEntryCreator")
+  settlementLedgerEntries SettlementLedgerEntry[]
+  acceptedInvitations     TripInvitation[]        @relation("InvitationAcceptedBy")
+  sharedLocations         MemberLocation[]
+}
+
+model UserPreference {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  locale    String?  @default("en")
+  timezone  String?  @default("UTC")
+  currency  String?  @default("INR")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Trip {
+  id                 String     @id @default(uuid())
+  name               String
+  description        String?
+  startDate          DateTime?  @db.Date
+  endDate            DateTime?  @db.Date
+  baseCurrency       String     @default("INR")
+  status             TripStatus @default(ACTIVE)
+  joinCode           String?    @unique @db.VarChar(12)
+  settlementRevision Int        @default(1)
+  eventSequence      BigInt     @default(0)
+  cashManagerUserId  String?
+  createdByUserId    String
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  members                 TripMember[]
+  expenses                Expense[]
+  settlements             Settlement[]
+  settlementReviews       SettlementExpenseReview[]
+  settlementLedgerEntries SettlementLedgerEntry[]
+  notifications           Notification[]
+  auditLogs               AuditLog[]
+  tripSettings            TripSetting?
+  memberBudgets           MemberBudget[]
+  outboxEvents            OutboxEvent[]
+  invitations             TripInvitation[]
+  financialEntries        FinancialEntry[]
+  memberLocations         MemberLocation[]
+}
+
+model TripSetting {
+  id                          String   @id @default(uuid())
+  tripId                      String   @unique
+  allowMemberExpenseEdit      Boolean  @default(true)
+  requireLocationConfirmation Boolean  @default(true)
+  allowPublicJoin             Boolean  @default(false)
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+}
+
+model TripMember {
+  id          String   @id @default(uuid())
+  tripId      String
+  userId      String
+  role        UserRole @default(MEMBER)
+  joinedAt    DateTime @default(now())
+  isActive    Boolean  @default(true)
+  budgetLimit Decimal? @db.Decimal(18, 2)
+
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tripId, userId])
+}
+
+model TripInvitation {
+  id               String    @id @default(uuid())
+  tripId           String
+  email            String
+  invitedBy        String
+  status           String    @default("pending")
+  expiresAt        DateTime  @db.DateTime(3)
+  acceptedAt       DateTime? @db.DateTime(3)
+  acceptedByUserId String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  trip       Trip  @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  acceptedBy User? @relation("InvitationAcceptedBy", fields: [acceptedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([email, status, expiresAt])
+  @@index([tripId, status, expiresAt])
+}
+
+model MemberBudget {
+  id              String   @id @default(uuid())
+  tripId          String
+  userId          String
+  plannedBudget   Decimal  @db.Decimal(18, 2)
+  remainingBudget Decimal  @db.Decimal(18, 2)
+  utilizationPct  Decimal? @db.Decimal(22, 2)
+  overspending    Decimal  @default(0) @db.Decimal(18, 2)
+  warningLevel    String   @default("normal")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@unique([tripId, userId])
+}
+
+model Expense {
+  id                     String        @id @default(uuid())
+  tripId                 String
+  title                  String
+  description            String?
+  amount                 Decimal       @db.Decimal(18, 2)
+  currency               String
+  convertedAmount        Decimal?      @db.Decimal(18, 2)
+  exchangeRate           Decimal?      @db.Decimal(18, 8)
+  exchangeRateCapturedAt DateTime?     @db.DateTime(3)
+  category               String
+  expenseType            ExpenseType
+  splitMethod            SplitMethod
+  paymentMethod          PaymentMethod
+  date                   DateTime
+  createdByUserId        String
+  updatedByUserId        String?
+  status                 String        @default("ACTIVE")
+  correctedFromExpenseId String?
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+
+  trip              Trip                      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  correctedFrom     Expense?                  @relation("ExpenseCorrections", fields: [correctedFromExpenseId], references: [id], onDelete: Restrict)
+  corrections       Expense[]                 @relation("ExpenseCorrections")
+  payers            ExpensePayer[]
+  allocations       ExpenseAllocation[]
+  locations         ExpenseLocation[]
+  receipts          ExpenseReceipt[]
+  financialEntries  FinancialEntry[]
+  settlementReviews SettlementExpenseReview[]
+
+  @@index([tripId, status, date])
+  @@index([correctedFromExpenseId])
+}
+
+model ExpensePayer {
+  id                        String        @id @default(uuid())
+  expenseId                 String
+  userId                    String
+  amount                    Decimal       @db.Decimal(18, 2)
+  currency                  String
+  paymentStatus             PaymentStatus @default(PENDING)
+  isCashManagerDisbursement Boolean       @default(false)
+  paidAt                    DateTime?
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  @@unique([expenseId, userId])
+}
+
+model ExpenseAllocation {
+  id              String   @id @default(uuid())
+  expenseId       String
+  userId          String
+  allocatedAmount Decimal  @db.Decimal(18, 2)
+  percentage      Decimal? @db.Decimal(5, 2)
+  weight          Decimal? @db.Decimal(18, 2)
+  isManual        Boolean  @default(false)
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  @@unique([expenseId, userId])
+}
+
+model ExpenseLocation {
+  id                 String   @id @default(uuid())
+  expenseId          String
+  latitude           Decimal? @db.Decimal(10, 7)
+  longitude          Decimal? @db.Decimal(10, 7)
+  placeName          String?
+  address            String?
+  providerPlaceId    String?
+  confirmationStatus String   @default("pending")
+  capturedAt         DateTime @default(now())
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+}
+
+model ExpenseReceipt {
+  id         String   @id @default(uuid())
+  expenseId  String
+  fileUrl    String
+  storageKey String
+  createdAt  DateTime @default(now())
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+}
+
+model Settlement {
+  id              String    @id @default(uuid())
+  tripId          String
+  debtorUserId    String
+  creditorUserId  String
+  totalAmount     Decimal   @db.Decimal(18, 2)
+  currency        String    @default("INR")
+  status          String    @default("PLANNED")
+  settlementType  String    @default("transfer")
+  planRevision    Int       @default(1)
+  createdByUserId String?
+  finalizedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  trip                  Trip                    @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  payments              SettlementPayment[]
+  SettlementLedgerEntry SettlementLedgerEntry[]
+
+  @@index([tripId, planRevision])
+}
+
+model SettlementPayment {
+  id                    String                   @id @default(uuid())
+  settlementId          String
+  provider              String?
+  providerTransactionId String?
+  transactionReference  String?
+  paymentMethod         SettlementPaymentMethod?
+  paymentDateTime       DateTime?                @db.DateTime(3)
+  paymentNotes          String?                  @db.VarChar(500)
+  idempotencyKey        String?                  @unique @db.VarChar(191)
+  debtorSubmittedAt     DateTime?
+  creditorConfirmedAt   DateTime?
+  disputedAt            DateTime?
+  disputeReason         String?                  @db.VarChar(500)
+  submittedByUserId     String?
+  confirmedByUserId     String?
+  amount                Decimal                  @db.Decimal(18, 2)
+  currency              String                   @default("INR")
+  status                SettlementPaymentStatus  @default(PENDING)
+  initiatedAt           DateTime?
+  confirmedAt           DateTime?
+  acknowledgementStatus String                   @default("pending")
+  disputes              String?
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @default(now()) @updatedAt
+
+  settlement    Settlement               @relation(fields: [settlementId], references: [id], onDelete: Cascade)
+  events        SettlementPaymentEvent[]
+  refunds       SettlementRefund[]
+  ledgerEntries SettlementLedgerEntry[]
+
+  @@index([settlementId, status])
+}
+
+model SettlementExpenseReview {
+  id               String    @id @default(uuid())
+  tripId           String
+  expenseId        String
+  userId           String
+  reviewRevision   Int       @default(1)
+  status           String    @default("PENDING")
+  comment          String?   @db.VarChar(500)
+  resolvedByUserId String?
+  resolutionReason String?   @db.VarChar(500)
+  reviewedAt       DateTime?
+  resolvedAt       DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  trip    Trip    @relation(fields: [tripId], references: [id], onDelete: Restrict)
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Restrict)
+
+  @@unique([expenseId, userId, reviewRevision])
+  @@index([tripId, status])
+}
+
+model SettlementPaymentEvent {
+  id             String   @id @default(uuid())
+  paymentId      String
+  idempotencyKey String   @unique @db.VarChar(191)
+  actorUserId    String
+  action         String
+  reason         String?  @db.VarChar(500)
+  details        Json?
+  createdAt      DateTime @default(now())
+
+  payment SettlementPayment @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+
+  @@index([paymentId, createdAt])
+}
+
+model SettlementRefund {
+  id              String   @id @default(uuid())
+  paymentId       String
+  idempotencyKey  String   @unique @db.VarChar(191)
+  createdByUserId String
+  amount          Decimal  @db.Decimal(18, 2)
+  currency        String
+  reason          String   @db.VarChar(500)
+  createdAt       DateTime @default(now())
+
+  payment       SettlementPayment       @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  ledgerEntries SettlementLedgerEntry[]
+
+  @@index([paymentId, createdAt])
+}
+
+model SettlementLedgerEntry {
+  id              String   @id @default(uuid())
+  tripId          String
+  settlementId    String
+  paymentId       String
+  refundId        String?
+  userId          String
+  createdByUserId String
+  entryType       String
+  amount          Decimal  @db.Decimal(18, 2)
+  currency        String
+  reversalOfId    String?  @unique
+  createdAt       DateTime @default(now())
+
+  trip       Trip              @relation(fields: [tripId], references: [id], onDelete: Restrict)
+  settlement Settlement        @relation(fields: [settlementId], references: [id], onDelete: Restrict)
+  payment    SettlementPayment @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  refund     SettlementRefund? @relation(fields: [refundId], references: [id], onDelete: Restrict)
+  user       User              @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@unique([paymentId, entryType])
+  @@index([refundId])
+  @@index([tripId, userId, createdAt])
+}
+
+model FinancialEntry {
+  id              String   @id @default(uuid())
+  expenseId       String?
+  tripId          String
+  userId          String
+  createdByUserId String?
+  entryType       String
+  amount          Decimal  @db.Decimal(18, 2)
+  currency        String
+  balanceAfter    Decimal? @db.Decimal(18, 2)
+  reversalOfId    String?  @unique
+  createdAt       DateTime @default(now())
+
+  expense    Expense?        @relation(fields: [expenseId], references: [id], onDelete: SetNull)
+  trip       Trip            @relation(fields: [tripId], references: [id], onDelete: Restrict)
+  user       User            @relation(fields: [userId], references: [id], onDelete: Restrict)
+  createdBy  User?           @relation("FinancialEntryCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  reversalOf FinancialEntry? @relation("FinancialEntryReversals", fields: [reversalOfId], references: [id], onDelete: Restrict)
+  reversedBy FinancialEntry? @relation("FinancialEntryReversals")
+
+  @@index([tripId, userId, createdAt])
+  @@index([expenseId, entryType])
+}
+
+model ExchangeRate {
+  id           String   @id @default(uuid())
+  fromCurrency String
+  toCurrency   String
+  rate         Decimal  @db.Decimal(18, 8)
+  capturedAt   DateTime @default(now())
+
+  @@unique([fromCurrency, toCurrency, capturedAt])
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  tripId     String?
+  userId     String?
+  dedupeKey  String?          @unique @db.VarChar(191)
+  type       NotificationType
+  title      String
+  message    String
+  isRead     Boolean          @default(false)
+  metadata   Json?
+  resolvedAt DateTime?
+  createdAt  DateTime         @default(now())
+
+  trip Trip? @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tripId, userId, createdAt, id])
+  @@index([userId, isRead, tripId])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  tripId     String?
+  userId     String?
+  entityType String
+  entityId   String
+  action     String
+  details    Json?
+  createdAt  DateTime @default(now())
+
+  trip Trip? @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model IdempotencyKey {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  resource  String
+  createdAt DateTime @default(now())
+}
+
+model OutboxEvent {
+  id            String    @id @default(uuid())
+  tripId        String?
+  eventKey      String?   @unique @db.VarChar(191)
+  tripSequence  BigInt?
+  eventType     String
+  payload       Json
+  attempts      Int       @default(0)
+  nextAttemptAt DateTime  @default(now()) @db.DateTime(3)
+  lockedAt      DateTime? @db.DateTime(3)
+  lastError     String?   @db.VarChar(1000)
+  processedAt   DateTime?
+  createdAt     DateTime  @default(now())
+
+  trip Trip? @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@unique([tripId, tripSequence])
+  @@index([tripId, createdAt, id])
+  @@index([processedAt, nextAttemptAt, lockedAt])
+}
+
+model MemberLocation {
+  id             String   @id @default(uuid())
+  tripId         String
+  userId         String
+  latitude       Decimal  @db.Decimal(9, 6)
+  longitude      Decimal  @db.Decimal(9, 6)
+  accuracyMeters Int?
+  capturedAt     DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tripId, userId])
+  @@index([tripId, updatedAt])
+}
